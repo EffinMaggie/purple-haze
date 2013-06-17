@@ -18,7 +18,7 @@ create table board
     tid integer not null default 1,
     cid integer null,
 
-    foreign key (cid) references tile(id),
+    foreign key (tid) references tile(id),
     foreign key (cid) references character(id)
 );
 

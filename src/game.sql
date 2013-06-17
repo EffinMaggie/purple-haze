@@ -64,9 +64,9 @@ select null as gid;
 create trigger gameInsert after insert on game
 for each row begin
     insert into character
-        (name, karma, sentient)
+        (karma, sentient)
         values
-        ('J. Doe', 500, 1);
+        (500, 1);
 
     update game
        set pov = last_insert_rowid()

@@ -3,7 +3,8 @@ create table race
     id integer not null primary key,
     name text not null,
     sentient boolean not null default 0,
-    karma integer not null default 500
+    karma integer not null default 500,
+    sexes integer not null default 2
 );
 
 create table racerange
@@ -44,6 +45,18 @@ create table metatypemodifier
     foreign key (sid) references skill(id)
 );
 
+create table racenameusage
+(
+    rid integer not null,
+    sex integer not null,
+    nuid integer not null,
+
+    primary key (rid, sex),
+
+    foreign key (rid) references race(id),
+    foreign key (nuid) references nameusage(id)
+);
+
 create view vrace as select distinct
     r.id as rid,
     m.id as mid,
@@ -81,20 +94,27 @@ left join metatypemodifier as mv on mv.rid = m.rid and mv.mid = m.id and mv.sid 
 ;
 
 insert into race
-    (id, name, sentient, karma)
+    (id,  name,   sentient, karma, sexes)
     values
-    (1,  'humanoid',     1, 300),
-    (2,  'agent',        0, 200),
-    (3,  'spirit',       0, 300),
-    (4,  'feline',       0, 100),
-    (5,  'canine',       0, 100),
-    (6,  'rodent',       0, 50),
-    (7,  'serpentes',    0, 100),
-    (8,  'fay',          0, 200),
-    (9,  'caudata',      0, 50),
-    (10, 'aves',         0, 100),
-    (11, 'shapeshifter', 0, 800),
-    (12, 'lagomorpha',   0, 50)
+    (1,  'humanoid',     1,   300,     2),
+    (2,  'agent',        0,   200,     1),
+    (3,  'spirit',       0,   300,     2),
+    (4,  'feline',       0,   100,     2),
+    (5,  'canine',       0,   100,     2),
+    (6,  'rodent',       0,    50,     2),
+    (7,  'serpentes',    0,   100,     2),
+    (8,  'fay',          0,   200,     2),
+    (9,  'caudata',      0,    50,     2),
+    (10, 'aves',         0,   100,     2),
+    (11, 'shapeshifter', 0,   800,     1),
+    (12, 'lagomorpha',   0,    50,     2)
+;
+
+insert into racenameusage
+    (rid, sex, nuid)
+    values
+    (1, 0, 1),
+    (1, 1, 2)
 ;
 
 insert into racerange

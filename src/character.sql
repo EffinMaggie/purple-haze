@@ -16,6 +16,7 @@ create table character
     karmatotal integer not null default 0,
     commlinkactive boolean not null default 1,
     sentient boolean not null default 0,
+    sex boolean not null default -1,
 
     foreign key (pid) references profile(id),
     foreign key (mid) references metatype(id),
@@ -27,7 +28,7 @@ for each row when new.mid is null begin
     insert or replace into character
         (id, pid, mid, cnid, name,
          agility, reaction, strength, intuition, logic, willpower,
-         karma)
+         karma, sex)
         select
             new.id,
             coalesce (new.pid, (select id as pid from profile order by random() limit 1)),
@@ -40,13 +41,18 @@ for each row when new.mid is null begin
             (select minvalue from vrange where mid = metatype.id and aid = 6) as intuition,
             (select minvalue from vrange where mid = metatype.id and aid = 7) as logic,
             (select minvalue from vrange where mid = metatype.id and aid = 8) as willpower,
-            0
+            0,
+            case when new.sex >= 0 then new.sex else abs(random()) % race.sexes end
         from metatype
         left join race on race.id = metatype.rid
         where (new.sentient and (race.sentient or metatype.sentient))
            or (not new.sentient)
         order by random()
         limit 1;
+    insert into vnamecharacter
+        (cid)
+        select new.id
+         where new.name is null;
     insert into cattribute
         (cid, aid, rating)
         select

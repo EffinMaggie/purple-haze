@@ -43,9 +43,10 @@ select
   0 as x,
   game.lines - 1 as y,
   37 as colour,
-      'Level: ' || board.z
+     'Level: ' || board.z
   || ' Karma: ' || vcharacter.karmatotal || ' (' || vcharacter.karma || ') '
-  || profile.name
+  || vcharacter.name
+  || ' (' || profile.name || ')'
   || case when game.moid <> 0 then ' :: ' || gamemode.description else '' end
   || '; Next: '
     || case when vnext.aid is not null then (select name from attribute where vnext.aid = id)
